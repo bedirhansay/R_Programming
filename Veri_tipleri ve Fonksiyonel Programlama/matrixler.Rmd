@@ -1,0 +1,145 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+#1)Matris Bicimlendirme
+
+##Matris Olusturma
+
+```{r}
+# Vektorlerden matris olusturma 
+v1 <- c(1,2,3,4,5)
+v2 <- c(6,7,8,9,10)
+v3 <- c(11,12,13,14,15)
+
+col <- cbind(v1,v2,v3)
+row <- rbind (v1,v2,v3)
+col
+row
+
+#matrix fonk ile olsuturma
+
+matrix(data = 1:15, ncol = 3, nrow = 5, byrow = FALSE)
+matrix(c(1,2,3,4,4,5,65,5,7),3,3)
+
+```
+
+##Matris Boyutlari
+```{r}
+m1 <- matrix(c(1,2,3,4,4,5,65,5,7),3,3)
+dim(m1) # Kaça kaçlık bir matris olduğunu gösterir. 
+
+matrix(rep(1:3),3,3) # rep ile aynı sayılardan oluşan matris oluşturur. 
+table(m1) # Hangi sayıdan kac adet kullanildiğini gosterir. 
+```
+
+##Matris Birlestirme
+
+```{r}
+ma <- rnorm(16)
+mb <- rnorm(16)
+
+ma <- matrix(ma,4,4)
+mb <- matrix(mb,4,4)
+
+ma
+mb
+
+cbind(ma,mb)
+rbind(ma,mb)
+
+```
+##Matris isimlendirme
+
+```{r}
+
+v1 <- c(1,2,3,4,5)
+v2 <- c(6,7,8,9,10)
+v3 <- c(11,12,13,14,15)
+
+col <- cbind(v1,v2,v3)
+
+#Kucuk matris icin 
+dim(col)
+rownames(col) <- c("Bir","iki","uc","dort","Bes") #c ile kullanılmalı çünjü birden fazla değer girilecek.
+
+#Daha buyuk matrixler icin paste fonk. kullanilir.
+
+dev_m <- matrix(1:50,10,5)
+dev_m
+
+rownames(dev_m) <- c(paste("musteri_id", 1:10, sep="_"))
+dev_m
+```
+#2) Matris Eleman islemleri
+
+##Matris indexleme
+```{r}
+# Basit indexleme eleman secimi 
+dev_m[1,1] #1.satir ve 1.sutunun kesisimi verir. 
+#Satir alirken 
+
+dev_m[,2] #2.sutundakileri
+dev_m[,2:3] #2.ve 3.satira denk gelen sutun degerleri
+dev_m[1,] # 1.satirdakileri
+
+rownames(dev_m) <- c(paste("son",1:10,sep= ""))
+colnames(dev_m) <- c(paste("Sıra",1:5,sep= ""))
+dev_m
+
+#Sutun ortalamasını rownames olarak atamak
+
+dev_m[,"Sıra5"] # Sutun 5i sec
+mean(dev_m[,"Sıra5"]) # Ortalamasını al 
+sqrt(mean(dev_m[,"Sıra5"])) # karekökünü al
+round(sqrt(mean(dev_m[,"Sıra5"]))) #Yuvarla
+as.character(round(sqrt(mean(dev_m[,"Sıra5"])))) #karaktere çevir çünkü sayı bir isim olamaz.
+colnames(dev_m)[5] <- as.character(round(sqrt(mean(dev_m[ ,"Sıra5"]))))
+
+# Apply ile aynı islem 
+colnames(dev_m) <- as.character(round(sqrt(apply(dev_m,2,mean)))) # 2 islemin sutunlarda yapılacağini gosterir.
+dev_m
+
+
+
+```
+
+##Matrix kosullu eleman secimi 
+```{r}
+
+# ortalaması 10 'dan küçük olan 2.sutun degerlerini bulunuz.
+
+dev_m[ , 2] # Dev_m matrisinde 2.sutun elemanları
+dev_m[mean(dev_m[ , 2]) < 2,2]
+```
+
+##Matrix hesaplamalar
+
+```{r}
+
+A <- matrix(1:9,3,3)
+A
+B <- matrix(1:9,3,3)
+B
+A+B
+```
+
+#3)Matematiksel islemler
+
+```{r}
+```
+
+##Matrix Apply uygulaması
+```{r}
+```
+
+##Regresyon Uygulaması
+```{r}
+```
+

@@ -1,0 +1,44 @@
+---
+title: "R markdown"
+author: "Bedirhan SAY"
+date: "2/14/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+ 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+# Numaralandırma 
+
+Numaralandirma için # işareti kullanilir. Tek kullanilirsa ana baslik iki tane kullanilirsa ana basligin alt basligi olarak algilanir.
+
+# İtalik yazma 
+
+*italik* - _italik_
+
+#üstünü çizme
+
+~ işareti ile çizlir ~
+
+# Link verme 
+[bu bir linktir](www.r-studio.com)
+
+# Tireleme 
+
+--
+---
+
+# Kalıon yaz yazma 
+**yazi**
+
+
+#Denklem ekleme
+$girilmek istenen denklem$
+
+
+#resim ekleme
+ 
+image : [](resminadi.jpg)

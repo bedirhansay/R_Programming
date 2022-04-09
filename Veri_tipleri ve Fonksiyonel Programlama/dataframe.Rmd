@@ -1,0 +1,228 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+# Data Frame nedir?
+
+##Data Frame olusturma  
+```{r}
+df <- data.frame(
+  magaza_no = c(1:5),
+  semt = c("Besiktas","Mecidiyekoy","Gop","Tuzla","Avcılar"),
+  ortalama_kazanc = c(60,70,34,54,65)
+  )
+df
+
+#Bazı Fonksiyonlar 
+summary(df) # Df icerisindeki verileri özetler
+str(df) 
+ncol(df)
+nrow(df)
+dim(df)
+table(df)
+```
+
+##Data Frame  birlestirme 
+```{r}
+df <- data.frame(
+  magaza_no = c(1:5),
+  semt = c("Besiktas","Mecidiyekoy","Gop","Tuzla","Avcılar"),
+  ortalama_kazanc = c(60,70,34,54,65)
+  )
+df2 <- data.frame(
+  magaza_no = c(1:5),
+  gecmis = c(2,3,4,5,6),
+  personel_sayisi = c(23,41,51,61,71)
+  )
+
+merge(df,df2,by = "magaza_no") # İki dataframe birlestirir.
+cbind(df,df2)
+rbind(df,df2)
+```
+
+##Data Frame degisken ekleme/silme 
+```{r}
+df_all <- merge(df,df2,by = "magaza_no")
+df_all$ort_mus = c(2,34,43,55,343) # İle yeni bir nesne eklenir.
+df_all$urun_turu = c("Ayakkabi","Canta","Tisört","pantolon","kazak")
+df_all
+df_all$per_kazanc = df_all$ortalama_kazanc / df_all$personel_sayisi
+df_all
+#eleman silme 
+
+df_all$urunler= c("Ayakkabi","Canta","Tisört","pantolon","kazak")
+df_all$urunler = NULL
+```
+
+##Data Frame satir ekleme/Silme 
+```{r df all}
+
+df
+rbind(df,c(6,"beyoglu",90)) # yapılarak veri girişi sağlanır.
+
+df[-6] # ile 6.index silinir. 
+
+```
+
+##Data Frame isimlendirme / Verileri Guncelleme
+```{r}
+df 
+colnames(df) = c("n","s","k")
+rownames(df) = c(paste("sira",1:5,sep = "-"))
+
+df$s <- tolower(df$s) #İle verileri guncelleyebiliriz. 
+
+#İstenilmeyen bir sutunu dışarda bırakmak icin 
+
+df <- df[,c("n","k")] # s'yi istememek aslında n ve k yı almaktır.
+
+```
+
+##****Data Frame satır degerlerini colnames olarak atamak 
+```{r}
+%>% # kendisinden önce gelen ifadeyi kendisinden sonra gelen ifade icin girdi olarak alıyor. 
+  
+df_all <- df_all %>% remove_rownames %>% column_to_rownames(var = "semt")
+
+
+```
+
+##liste  yada matrisleri uData Frame cevirme
+```{r}
+m2 <- matrix((1:9),3,3)
+as.data.frame(m2)
+l2 <- list(1:9)
+as.data.frame(l2)
+```
+
+##Data Frame degisken turlerini degistirme 
+
+```{r}
+
+str(df_all)
+df_all$ortalama_kazanc <-factor(df_all$ortalama_kazanc)
+```
+
+##Data Frame  Eleman Secimi 
+```{r}
+library(ggplot2)
+mpg
+str(mpg)
+mpg$model
+attach(mpg) #Df'i attach olarak eklersek dolar işsaretine gerek kalmadan verileri görebiliriz. 
+detach(mpg) # Atach ifadesini kaldırır.
+model
+mtcars
+
+
+```
+
+##Data Framenden yeni bir dt frame olusturma 
+```{r}
+mpg
+#head()fonksiyonu ilk altı gözlemi gösterir.
+
+df4 <- data.frame(mpg$model,mpg$year)
+head(df4,10) # ilk on gözlem
+degiskenker <- c("cyl","model","year")
+df5 <- mpg[degiskenker]
+
+```
+
+## dataframe eleman secimi 
+
+```{r}
+mpg[mpg$manufacturer=="audi" & mpg$cyl == "6"]
+
+```
+
+##Dataframe Siralama 
+
+```{r}
+df_all[order(df_all$magaza_no, decreasing = TRUE)]
+
+```
+
+##APPLY ailesi 
+
+```{r}
+
+apply(matrix(1:9,3,3),2,mean)
+a <-list( a = rnorm(90),
+      b = rbeta(10,1,2),
+      c = 1:5000
+      )
+#sapply listenin değerlerini vektöre dönüştürür. 
+
+lapply(a, mean)
+k <- sapply(a, mean)
+k
+
+```
+
+## Vapply
+```{r}
+
+# Çıktıyı garanti altına alan fonksiyon
+
+vapply(1:10, sqrt, double(1)) # double istediğimiz ver tipi 
+
+```
+
+
+## T apply 
+
+```{r}
+
+str(mpg)
+
+#kategorik degiskenlerin kırılımlarında fonk. calistirabilir. 
+tapply(mpg$cyl,mpg$class,mean)
+```
+
+## by 
+
+```{r}
+
+by(mpg[, c("displ","cty","hwy")],mpg$cyl, colMeans)
+
+
+```
+
+## map ailesi 
+
+```{r}
+
+
+```
+
+
+## SON Tibble 
+```{r}
+
+# matrix gibi oluşturulur. 
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

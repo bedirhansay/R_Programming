@@ -1,0 +1,339 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
+---
+
+#Tek Degiskenli Veri Görsellestirme 
+
+##1)Kesikli Degisken ile Veri gorsellestirme. 
+
+##Kesikli Degisken: 
+```{r}
+##1)Kesikli Degisken: Yaş ve ağırlık ile beraber boy uzunluğu ya da kandaki kolesterol değeri gibi unsurlar nicel değişkenlik olarak ifade edilmektedir. Bu bağlamda ölçülebilen değişken değerler, sayı doğrusu üzerinde eğer atanabiliyorsa bunlara kesikli değişken denmektedir. ile Veri gorsellestirme. 
+```
+
+```{r}
+# Gerekli olan kütüphaneler sayısı artabilir. 
+library(tidyr)
+install.packages("ggplot2")
+library(ggplot2)
+library(tibble)
+```
+
+
+## Barplot(sutun grafigi)
+```{r}
+#REP fonksiyonu ile belirtilen değerlerden tekrar eden veri yapıları olusturulur. 
+
+data <- tibble(kullanim = c(rep("haftaici", 30),rep("haftasonu",13)))
+
+#1) 
+  ggplot(data, aes(kullanim)) + 
+    geom_bar()
+
+data1 = tibble(
+  kullanim = factor(c("instagram","twitter","facebook")),
+    sure = c(24,34,56))
+
+#2)
+ggplot(data1, aes(x = kullanim, y = sure)) + 
+  geom_bar(stat = "identity")
+
+#3) 
+ggplot(data1, aes(x= kullanim, y = sure)) + 
+  geom_bar(stat = "identity", aes(colour = kullanim, size = 1))
+
+#4) #position= "Dodge") sutunları ayrı ayrı görmek gerekir. 
+ggplot(data1, aes(x = kullanim, y = sure,colour = kullanim, size = 1, binwidth = 1)) + geom_bar(stat = "identity", position= "Dodge")
+
+#5)
+df <- tibble (
+  kullanim = factor(c("hs","hi"), levels = c("hi","hs")),
+  sure = c(100,180))
+
+
+```
+
+#Cızgı Grafik Olusturma / Nokta Grafiği
+
+```{r}
+
+social <- tibble(
+  kullanim = factor(rep(c("Twitter","Instagram","Facebook","Youtube"), each = 25)),
+  mobile = factor(rep(c(rnorm(50,mean= 47), rnorm(50, mean = 48)))),
+  web = factor(rep(c(rnorm(50, mean = 48,), rnorm(50, mean = 47))))
+)
+
+
+#Geometrisi çizgi olan çizgi grafiği çizimi için aynı zamanda nokta grafiği de eklenbilir ve çizgilerin noktaların özellikleri ayarlanabilir. 
+
+#1) 
+
+ggplot(social, aes(kullanim, web, group = 1)) + 
+  geom_point() + 
+  geom_line()
+data1
+#2)
+ggplot(data1, aes( x = kullanim, y = sure , group = 1)) + 
+  geom_point(colour ="Black", size = 10 , shape = 21, fill = "black") +
+  geom_line(colour ="black", linetype="dashed", size = 2.6)
+
+#Grafiğin hangi noktadan başladığını görmek yani sıfır noktasına erişmek için expand_limit(y=0 ) formülü eklenir. 
+
+#3) 
+
+ggplot(data1, aes( x = kullanim, y = sure, group = 1)) + 
+  geom_point() + 
+  geom_line() + 
+  expand_limits(y = 0 )
+       
+
+         
+
+```
+
+# Histogram Grafiği 
+
+```{r}
+ #1)
+
+ggplot(data1, aes(sure))+ 
+  geom_histogram()
+
+#2)
+data2 <- tibble(
+  cinsiyet = factor(rep(c("E","K"), each = 100)),
+  sure = c(rnorm(100,mean = 80), rnorm(100, mean = 81)))
+
+# Binwidth ile her bir histogramın 
+ggplot(data2, aes(sure)) + 
+  geom_histogram(binwidth = .5,colour = "black", fill = "orange")
+  xlab =("SÜRE DAĞILIMI") + ylab("FREKANKS") + ggtitle("BU BİR HİSTOGRAMDIR")
+  
+
+# Klasik histogram ve eksenlerin adlandırlması xlab()+ Ylab() ve histogramın adlandırılması ggtitle olarak yapılır. 
+colnames(social)
+#3) 
+  ggplot(social, aes(web)) + 
+    geom_histogram(stat = "count")
+
+
+```
+
+# Density ( Yoğunluk ) Grafiği
+
+```{r}
+# Histogram grafiği ile yoğunluk grafiğinin örtüşebilmesi için bir eksen değer ayarlaması yapılmalıdır.
+# Klask bir yoğunluk grafiği 
+ggplot(data2, aes(sure)) + 
+  geom_histogram(aes( y = ..density..), binwidth = .30, colour = "orange", fill = "Black") + 
+  geom_density( alpha = 0.3, colour = "white", fill = "orange")
+  
+```
+
+# Kırılımlara Göre yoğunluk Grafiği 
+
+```{r}
+ggplot(data2, aes(sure, fill = cinsiyet)) + 
+  geom_density(alpha= .5)
+  geom_histogram(binwidth = .5,alpha = .5, position = "identity")
+#Cinsiyet kategorik, sure ise sürekli bir dğeişkendir. 
+
+```
+
+#Kıırılmları iki ayrı grafikte gösterme 
+
+```{r}
+ggplot(data2, aes(sure)) + 
+  geom_histogram(binwidth = .5,colour = "black", fill = "orange") + 
+  facet_grid(cinsiyet ~ .)
+
+```
+
+
+# Sürekli Tek Değişken Görselleştirme 
+
+##1) Box Plot (geom_boxplot )
+
+```{r}
+#Aykırı gözlemlerin kümelenmeleri göstermek için kullanilir. 
+
+ggplot(data2, aes( x = cinsiyet, y = sure, fill = cinsiyet)) + 
+  geom_boxplot()+
+  coord_flip() # Grafiği döndürmek için kullanilir. 
+
+```
+
+##2) Alan Grafiği(geom_area)
+
+```{r}
+ggplot(data2, aes(sure)) + 
+  geom_area( stat = "bin")
+```
+
+##3) Frekans Grafiği (geom_freqpoly)
+
+```{r}
+ggplot(data2, aes(sure)) + 
+  geom_freqpoly()
+
+ggplot(data2, aes(sure)) + 
+  geom_dotplot()
+```
+
+
+## İki Degiskenli Veri Görsellestirme 
+
+#1) Sürekli X ve Sürekli Y Degiskenlerini Görsellestirme (Scatter-Plott)
+
+```{r}
+data3 <- tibble(
+  cinsiyet = factor(rep(c("E","K"),each = 500)),
+  m = c(rnorm(500, mean = 80), rnorm(500, 82)),
+  w = c(rnorm(500, mean = 83), rnorm(500, 81)))
+data3
+
+#1)
+ggplot(data3, aes(x = w , y = m, color= cinsiyet))+
+  geom_point(calour = "orange") + 
+  geom_line()
+#Yine üst üste grafikler eklenebilir. 
+#içeriisine colour yazılırsa farklı renklerde çıkar. 
+
+#2)
+ggplot(data3, aes(x = m , y = w)) + 
+  geom_point() + 
+  geom_smooth() #Grafikle ilgili bir çizgi çeker yorum. 
+
+#3) 
+ggplot(data3, aes(x = m , y = w)) + 
+  geom_point() + 
+  geom_smooth(method = lm) #method = lm ile Çizgiyi lineer çeker.
+
+#4)
+ggplot(data3, aes(x = m , y = w)) + 
+  geom_point() + 
+  geom_smooth(method = lm , se = FALSE) #se false çizgi etrafındaki gri ile belirtilen güven aralığını kaldırır.
+
+#5) 
+ggplot(data3, aes(x = w , y = m , colour= cinsiyet)) + 
+  geom_point() + 
+  geom_smooth(method = lm ,se= FALSE)
+
+```
+
+#Kesikli x Sürekli Y Görselleştirme 
+
+# Sutun grafiği(geom_bar)
+
+```{r}
+
+data1 = tibble(
+  kullanim = factor(c("instagram","twitter","facebook")),
+  sure = c(24,34,56))
+
+
+ggplot(data1, aes(x = kullanim, y = sure, fill = kullanim)) + 
+  geom_bar(colour = "orange", stat = "identity") + 
+  guides(fill = FALSE) # Guide sekmesini kapatır. 
+  
+
+
+
+```
+
+## Box Plot 
+
+```{r}
+ggplot(data2, aes( x = cinsiyet, y = sure, fill = cinsiyet)) + 
+  geom_boxplot() + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
+
+## Dot Plot(geom_dotplot)
+
+```{r}
+ggplot(data2, aes( x = cinsiyet, y = sure, fill = cinsiyet)) + 
+  geom_dotplot(binaxis = "y", stackdir = "center") + geom_violin()
+
+```
+
+## Violin (geom_violin)
+
+```{r}
+ggplot(data2, aes( x = cinsiyet, y = sure, fill = cinsiyet)) + 
+  geom_dotplot(binaxis = "y", stackdir = "center") + geom_violin(scale = area)
+```
+
+
+# Kesikli X, Kesikli Y 
+```{r}
+df <- tibble(
+ kullanim = factor(c("hs","hi")), levels = c("hi","hs"),
+  sure = c(100,180),
+  cinsiyet = factor(c("E","K")))
+
+ggplot(df, aes(kullanim,cinsiyet)) + geom_count()
+```
+
+
+## Grafikleri Bölme 
+
+```{r}
+ 
+data6 <- tibble(
+  cinsiyet = factor(rep(c("E","K"),each = 600)),
+  m = c(rnorm(600, mean = 80), rnorm(600, 82)),
+  w = c(rnorm(600, mean = 83), rnorm(600, 81)),
+  me = factor(rep(c("A","B","C"),each = 400)))
+
+
+t <- ggplot(data6,aes(m,w)) + geom_point()
+t + facet_grid(. ~cinsiyet) #Cinsiyet bazında iki farklı grafik almak için bölündü. Bu işlem sutunlara göre böler. 
+
+t + facet_grid(cinsiyet ~ .) # Bu işlemde satırlara göre böler. 
+t + facet_grid(me ~cinsiyet) #Me değerlerine göre bölmek istediğimizde
+
+```
+
+## Zaman Serisi Görselleştirme
+
+```{r}
+
+library(dplyr)
+head(economics)
+
+d <- economics
+
+ggplot(d, aes(date,pop)) + 
+  geom_line()
+
+s <- d%>% filter(date > as.date("2010-1-1"))
+
+ggplot(d,aes(date,pop)) + 
+  geom_line(aes(size = unemploy/pop))
+```
+
+##Çoklu zaman serisi Görselleştirme
+
+```{r}
+
+ddf <- economics %>% 
+  select(date,psavert,uempmed) %>%
+  gather(key = "variable", value = "value", -date)
+
+
+ggplot(ddf, aes(date,value)) + 
+  geom_line(aes(colour = variable), size = 1)
+
+ggplot(ddf, aes(date,value)) + 
+  geom_area(aes(colour = variable, fill = variable),
+            alpha = 0.5, position = position_dodge(0.8))
+```
+
+

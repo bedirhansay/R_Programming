@@ -1,0 +1,105 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r} 
+install.packages("dplyr")
+library(dplyr)
+install.packages("ncyflights")
+library(ncyflights13)
+
+df <- DATA
+
+DF
+colnames(DF)
+
+df[1] <- NULLkş
+
+
+select(df,NAME:ID)
+
+select(df, -c("NAME","SURNAME"))
+
+select(df, contains("science"))
+
+filter(df, SCIENCE == 87)
+
+filter(df, SCIENCE < mean(SOCIAL)) %>%
+  arrange(NAME)
+
+df %>% sample_frac(0.5)
+df %>% sample_n(5)
+df %>% slice(3:7)
+df %>% top_n(5) 
+head(df,10)
+
+
+mutate(df, 
+       
+      ortalama = SCIENCE+MATH+SOCIA
+      )
+
+
+rename(df, 
+        Toplam = ortalama
+       )
+
+
+
+
+
+df %>% 
+  group_by(COUNTRY) %>% 
+  summarise(ULKE_sayisi = n(),ortalama = SCIENCE + MATH)
+tidyverse
+
+
+
+
+
+install.packages("tidyverse")
+library(tidyverse)
+
+
+
+table1
+
+gather(table1,'1999','2000', key = ye)
+
+
+tidy<-gather (table4a,"1999","2000", key = year, value =cases )
+
+table4a
+spread(tidy, year, value = cases)
+
+
+tidy %>% unite(Bedo,'1999','2000', sep= " _")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+ 

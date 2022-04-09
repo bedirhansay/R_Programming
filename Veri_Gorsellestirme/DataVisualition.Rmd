@@ -1,0 +1,298 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+####------------------------ Data Visualition ---------------------------#######
+
+#------------------------- GENERAL INFORMATION --------------------------------#
+
+```{r}
+
+#Kullanilacak veri seti mtcars 1974 yilinda bir gazate tarafından arabalar üzerinde yaptığı bir araştırma. 
+mtcars
+ArabaVeri = subset(mtcars, select = c("mpg","cyl","wt","am"))
+colnames(ArabaVeri) = c("yol","silindir","ağırlık","vites")
+ArabaVeri$silindir = as.factor(ArabaVeri$silindir)
+ArabaVeri$vites = as.factor(ArabaVeri$vites)
+levels(ArabaVeri$vites) = c("otomatik","manuel")
+
+```
+
+#------------------------- GGPLOT GENEL YAPISI  --------------------------------#
+
+```{r}
+grafik1 <- ggplot(ArabaVeri, aes(ağırlık,vites))
+grafik1 + geom_point(aes(colour = ağırlık))
+
+grafik2 <- ggplot(ArabaVeri, aes(silindir,vites),fill = "Blue")
+grafik2 + geom_point(colour = "RED", shape = 21, size = 3, fill = "Black")
+
+grafik3 <- ggplot(ArabaVeri, aes(ağırlık,silindir))
+grafik3 + geom_point(aes(colour = ağırlık))
+
+## Grafiğe yazı yazdırmak için geom_text() fonk. kullanilir. Label etiketi aes içerisinde olması gerekir. 
+
+grafik2 <- ggplot(ArabaVeri, aes(silindir,vites, label = rownames(ArabaVeri)))
+grafik2 + geom_point() + geom_text(check_overlap = TRUE) 
+
+## Yazılar üst üste geldiğinde geom_text(check_overlap = TRUE) Kullanilir.  
+
+
+## OVERPLOTTING: Grafikte noktalar çakışırsa bütün değerler görünmez. Bu problemin adıdır. Sorun geom_point(position = jitter ) olarak yazılmalıdır.
+grafik1 + geom_point(position = "jitter")
+
+## Değişkenlerin şekil ve renklerini ayrı ayrı görebiliriz. 
+grafik1 + geom_point(aes(shape=vites,colour=vites),position ="jitter")
+
+#Sürekli değişkenler yani sayısal değerler şekil ve renk değiştiremez. Sabit kategorik değişkenler değiştirir. 
+
+#ggsave("grafiğim.png", width = 2, height = 2) olarak otomatik olarak kayıt yapılabilir. Boyutları ayarlanabilir.
+
+
+```
+
+#-------------------------SCATTER İLE SACILIM(NOKTA) GRAFİĞİ   --------------------------------#
+
+```{r}
+#1) Eksenleri isimlendirmek için xlabs, ylabs yada labs fonksiyonu kullanilir. 
+#ggtitle ile grafiğe isim verilebilir. 
+
+sacilim <- ggplot(iris , aes(Sepal.Length, Sepal.Width))
+sacilim + geom_point(colour="red",shape = 21,size = 5, fill = "Black") + 
+labs(x="Taç Yaprağı Uzunluğu", y = "Taç Yaprağı Genişliği") + 
+ggtitle("İris Çiçeği Genel İstatistik")
+
+#2)Colour ile eklenen başka bir değişkene göre renklendirebilir. Örn. species oranı yok ama oranlanan verilerin hangi türe ait olduğu orataya çıkar.Colour ile eklenen başka bir değişkene göre renklendirebilir. 
+
+sacilim <- ggplot(iris , aes(Sepal.Length, Sepal.Width,colour=Species))
+sacilim + geom_point()
+  
+
+#3) shape ile eklenen başka bir değişkene göre renklendirebilir. Örn. species oranı yok ama oranlanan verilerin hangi türe ait olduğu orataya çıkar.
+
+sacilim <- ggplot(iris , aes(Sepal.Length, Sepal.Width,shape=Species))
+sacilim + geom_point()
+
+#4) Hem türü hemde rengini değiştirmek istersek:
+
+sacilim1 <- ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species, shape = Species))
+sacilim1 + geom_point()
+
+#5) Geom_smooth fonksiyonu ile birlikte Grafiğe eğri veya doğru eklenebilir. Eğer düz bir doğru çekmek istiyorsak method = lm olarak eklenir.
+
+sacilim1 + geom_point() + geom_smooth() 
+sacilim4 <- ggplot(iris , aes(Sepal.Length, Sepal.Width))
+sacilim4 + geom_point() + geom_smooth(method = "lm", colour = "Red", size = 3)
+
+#6) se eğri etrafındaki güven aralığıdır kaldırmak için se = False yapılır. Saydamlığını değiştirmek için alpha = , ve fill kullanilir. 
+sacilim4 + geom_point() + 
+  geom_smooth(method = "lm", colour = "Red", size = 3, se = TRUE, alpha= 0.4, fill = "Blue")
+
+#7) Eğer türlerin kendi içerisinde regresyon eğrisi çizmek istersek. 
+
+sacilim10 <- ggplot(iris , aes(Sepal.Length, Sepal.Width, colour = Species))
+sacilim + geom_point() + 
+  geom_smooth(method = "lm", colour = "Red", size = 1, se = TRUE, alpha= 0.2, fill = "Blue")
+
+#8) Eğer türlere göre şekil ve renk farkli iken bir regresyon doğrusu çizmek istiyorsak.
+
+sacilim10 + geom_point() + geom_smooth(method = "lm",aes(fill = Species), alpha = 0.1, )
+
+```
+
+#-------------------------BAR PLOT VISUALITION (SUTUN GRAFİGİ) --------------------------------#
+
+```{r}
+library("ggplot2")
+library(tidyr)
+#REP fonksiyonu ile belirtilen değerlerden tekrar eden veri yapıları olusturulur. 
+
+data <- tibble(
+  kullanim = c(rep("haftaici", 30),rep("haftasonu",13)),
+  sure = factor(c(rnorm(43, mean = 45))))
+
+#1) 
+data1 = tibble(
+  kullanim = factor(c("instagram","twitter","facebook")),
+    sure = c(24,34,56))
+
+#2)
+ggplot(data1, aes(x = kullanim, y = sure , colour = kullanim, fill= "red")) + 
+  geom_bar(stat = "identity")
+
+#3) Psoition Dodge ile farklı grupları yanyana görürüz. 
+ggplot(data1, aes(x= kullanim, y = sure)) + 
+  geom_bar(stat = "identity", position ="dodge", aes(colour = kullanim,shape = kullanim, size = 1))
+
+
+#4)
+ggplot(data1, aes(x = kullanim, y = sure,colour = kullanim, size = 1, binwidth = 1)) + geom_bar(stat = "identity")
+
+#5)
+df <- tibble (
+  kullanim = factor(c("hs","hi"), levels = c("hi","hs")),
+  sure = c(100,180))
+
+```
+
+#-------------------------BOX-PLOT ORTALAMALAR İCİN SUTUN GRAFIKLERİ--------------------------------#
+
+```{r}
+library(MASS)
+birthwt
+info = subset(birthwt,select= c("age","smoke","bwt","race"))
+colnames(info) = c("AnneYas", "Sigara", "BebekKilo","Irk")
+levels(info$Sigara) = c("İçiyor","İçmiyor")
+levels(info$Irk) = c("Beyaz", "Siyahi","Melez")
+
+str(info)
+
+# ORtalamalar için: 
+
+bar <- ggplot(info, aes(Sigara,BebekKilo), fill = Irk) 
+ bar +  stat_summary(fun = mean , geom= "bar", fill = "red", colour = "black")+
+   stat_summary(fun.data = mean_cl_normal,geom = "pointrange") + 
+   labs(x = "Sigara", y= "BebekKilo")
+ 
+ 
+ # 
+ bar = ggplot(info, aes(Sigara, BebekKilo, fill = Irk))
+   bar + stat_summary(fun = mean, geom = "bar", position = "dodge")+
+     stat_summary(fun.data = mean_cl_normal,geom = "errorbar")
+```
+
+
+#-------------------------GEOM_POİNT ÇİZGİ GRAFİKLERİ --------------------------------#
+
+
+```{r}
+#1) y Eksenindeki surekli degiskenin , y eksenindeki sürekli veya kategorik degiskenin degisimini görmek icin kullanilir.
+
+deneme <- 1:5
+puan <- c(60,75,70,85,95)
+basarı <- data.frame(deneme,puan)
+
+line <- ggplot(basarı, aes(x = deneme, y = puan))
+line + geom_line()
+
+#2) X eksenindeki değişken factor tipinde ise group kelimesi kullanilir. 
+
+line <- ggplot(basarı, aes(x = factor(deneme), y = puan, group = 1))
+line + geom_line()
+
+
+#3) Grafikte ayarlı gelen çzigi stilini degistirme 
+
+line <- ggplot(basarı, aes(x = factor(deneme), y = puan, group = 1))
+line + geom_line(linetype = "dashed",size = 1, colour = "red")
+
+
+#4 Grafiği o noktasından başlatmak için:
+
+line <- ggplot(basarı, aes(x = factor(deneme), y = puan, group = 1))
+line + geom_line(linetype = "dashed",size = 1, colour = "red") +
+ylim(0,max(basarı$puan))
+
+#5) verilere nokta eklemek icin: 
+
+line <- ggplot(basarı, aes(x = factor(deneme), y = puan, group = 1))
+line + geom_line(linetype = "dashed",size = 1) +
+ylim(0,max(basarı$puan)) + geom_point(size = 4 , shape = 21, colour = "red", fill = "black" )
+
+
+#&) Ucuncu bir degisken eklemek:
+cinsiyet <- c("E","K","K","E","E")
+puanOrt <- c(96,75,70,85,95)
+sınıf  <- c("A","B","C","D","E")
+
+genel <- data.frame(cinsiyet,puanOrt,sınıf)
+
+ggplot(genel,aes(x =sınıf, y = puan, group = cinsiyet, shape = cinsiyet, linetype = cinsiyet, colour = cinsiyet)) + geom_line(position = "dodge",linetype = "dashed", colour = "Black") + 
+  geom_point(size = 5, shape = 21, fill = "darkblue")
+
+ #Farklı renkler icin: 
+
+ggplot(genel,aes(x =sınıf, y = puan, group = cinsiyet, shape = cinsiyet, linetype = cinsiyet, colour = cinsiyet)) + geom_line() + scale_color_brewer("set4") 
+
+
+```
+
+#-------------------------HİSTOGRAM GRAFİKLERİ --------------------------------#
+
+```{r}
+library(MASS)
+birthwt
+info = subset(birthwt,select= c("age","smoke","bwt"))
+colnames(info) = c("AnneYas", "Sigara", "BebekKilo")
+levels(info$Sigara) = c("İçiyor","İçmiyor")
+
+ggplot(info, aes(x = AnneYas))+
+  geom_histogram(binwidth = 0.5, colour = "orange", fill = "orange")
+
+#levels ile birlikte ayrı ayrı facet_grid ile grafik çizmek isteyebiliriz. 
+
+str(info)
+info$Sigara <- as.factor(info$Sigara)
+levels(info$Sigara) = c("İçiyor","İçmiyor")
+
+ggplot(info, aes(x = BebekKilo))+
+  geom_histogram(binwidth = 0.20, colour = "black", fill = "orange") + 
+  facet_grid(Sigara ~.) 
+
+## Gruplanmış kategorileri ayrı grafklendirmek için 
+
+ggplot(info, aes(x = BebekKilo, fill = Sigara))+
+  geom_histogram(position = "identity",binwidth = 100)
+  
+
+```
+
+
+#-------------------------YOĞUNLUK GRAFİKLERİ --------------------------------#
+
+```{r}
+
+ggplot(info,aes(BebekKilo, colour = Sigara)) + 
+geom_density(alpha = 0.5)
+
+# Transparanlık eklemek icin fill kullanilir.
+
+ggplot(info,aes(BebekKilo, fill = Sigara)) + 
+geom_density(alpha = 0.6) + 
+facet_grid(. ~ Sigara) # Dikey yan yana 
+#facet_grid(Sigara ~ .) # Yatay Yanyana
+
+ggplot(info,aes(BebekKilo,  y = ..density..))+ 
+geom_histogram() + geom_density() + facet_grid(Sigara ~.)
+```
+
+#-------------------------BOX-PLOT--------------------------------#
+```{r}
+#SÜREKLİ DEĞİŞKENLERİN DAĞILIMINI GÖSTERİR. VE AYKIRI DEĞERLERİ GOSTERİR.
+install.packages("ggplot2")
+library(ggplot2)
+
+
+#1) TURLERE GORE AYRI AYRI ALMAK İCİN X = DEGERİ GİRİLİR
+ggplot(iris,aes(Species, y = Sepal.Width )) + 
+  geom_boxplot(outlier.colour = "red", outlier.shape = 21, outlier.size = 5) + 
+  coord_flip() 
+  # Eksenleri Çevirir. Noktalar aykırı gözlemi. 
+
+
+#2) YADA TEK BİR TABLO YAPMAK İCİN 
+ggplot(iris,aes(x= 1, y = Sepal.Width )) + 
+  geom_boxplot(outlier.colour = "red", outlier.shape = 21, outlier.size = 5) + 
+  coord_flip()    
+
+#3) Norch ile medyanlar karşılaştırılabilir. 
+
+ggplot(iris,aes(Species, y = Sepal.Width )) + 
+  geom_boxplot(notch = TRUE) 
+
+#4)
+ggplot(iris,aes(Species, y = Sepal.Width )) + 
+  geom_boxplot()+stat_summary(fun= "mean", geom="point", shape = 23, size =2 , fill ="red" ) 
+```

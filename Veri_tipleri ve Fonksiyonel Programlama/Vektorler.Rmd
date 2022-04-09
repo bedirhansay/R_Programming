@@ -1,0 +1,152 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+#1) Atomik Vektörler
+
+```{r}
+#Boolen 
+c(TRUE, FALSE, NA)
+
+#integer/numeric
+
+a <- 5 # ya da 
+b z- 5L # L harfi integer oldugunu belirtir.
+
+# Character
+
+t <- "ahmet"
+```
+
+## Vektor Olusturma 
+
+```{r}
+a <- c(1,2,3,4)
+a <- 1:10 # A değeri 1 ile 10 arasındaki değerli alarak bir vektör olusturur.
+a <- c("a","b")
+
+```
+
+## Vektor Birlestirme 
+
+```{r}
+v <- 1:10
+y <- 2:11
+z <- 1:5
+# Eger eleman sayilari ayni ise üst üste gelen elemanları toplar 
+v+y
+
+# Eger eleman sayilar katlari ise önce denk gelenleri toplar yada bölerek ekler.v
+v+z
+# alttaki fonk. ile v vektorunun ucuna y'yi ekler daha buyuk bir vektor olur.
+c(v,y,z) 
+
+cbind(v,z) # Cbind ile colon bazında yani sutun olarka birleştirir.
+rbind(v,z,y) # Satir bazinda birlesitir. 
+```
+
+##Vektor isimlendirme
+```{r}
+ c(1,2,3) # ile vektor yaparken
+c(x=1,y=2,z=3) #isimlendirilmiş vektor olustuurulur.
+```
+
+##Vektor tipleri
+
+```{r}
+is.vector()
+is.numeric()
+# Gibi sorgularla sorulur.
+
+```
+
+## Vektor Tipleri arası donusum
+
+```{r}
+tf <- c("T","F")
+
+tf <- as.logical()
+ 
+a <- c(10,12,3,3,4,242,24,24,242,42)
+
+a <- factor(a)
+
+```
+
+#2) Vektor Eleman islemleri
+
+##Vektor İndexi ve eleman Secimi 
+```{r}
+#C fonk birden fazla eleman eklenirken yada secilirken yazilir.
+# Rnorm ile random olarak sayilar secilir.
+
+vector <- rnorm(30)
+vector
+vector[1]
+```
+
+##Birden Fazla Eleman Secmek
+```{r}
+vector[c(1,2)]
+```
+
+##Seri olarak Eleman Secmek 
+```{r}
+vector[1:10]
+```
+
+## index olarak deger atamak
+
+```{r}
+
+
+vector [1] <- 2
+vector [1]
+```
+
+## Toplu Olarak deger atamak 
+
+```{r}
+vector[c(1,23,4)] <- c(1,2,2)
+vector[c(1,23,4)]
+vector[1:10] <- 0
+```
+
+
+## İsimlendirilmis Vektorlerden eleman secmek
+
+```{r}
+v <- c( x = 1, y = 2, z = 3)
+
+v["x"]
+
+```
+
+
+##Kosullu Elaman Secimi 
+
+```{r}
+vector[vector>0] # Vektor icerindeki o den buyuk degerleri getir. 
+
+
+```
+
+## Vektor Elemanlarının silinmesi 
+
+```{r}
+k <- 1:10
+k <- NULL 
+
+```
+
+
+## Vektorel Hesaplamalar 
+
+```{r} 
+
+```
+
+
+

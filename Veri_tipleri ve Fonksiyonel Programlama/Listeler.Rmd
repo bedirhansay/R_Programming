@@ -1,0 +1,66 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+#Liste Bicimlendirme
+
+## Liste olusturma 
+```{r}
+
+list1 <- list("supernova","2","Veri bilimi",1:10, 57102.34)
+list2 <- list("Ahmet","2","Neler Neler")
+c(list1+list2)
+```
+
+## Liste iismlnedirme
+```{r}
+
+liste <- list(c("Ali","İdda","gek","çık"), matrix(1:9,3,3), list("olabilir",13))
+names(liste) <- c("innovatif","matrixs","karisik")
+```
+
+##Liste eleman secimi 
+
+```{r}
+liste[1]
+liste[1][1]
+liste$matrixs
+```
+
+## Eleman degistirme / Listeye Eleman ekleme /Eleman silme
+```{r}
+#olmayan index secilip atama yapilir.
+liste[4] <- 5
+liste[4] <- NULL 
+```
+
+##Listeyi vektore donusturme 
+```{r}
+la <- list(1:15)
+lb <- list(10:14)
+unlist(la)
+is.vector(la)
+unlist(lb)
+is.vector(lb)
+```
+
+##Liste Hesaplamalar
+```{r}
+unlist(la)*2
+tolower(liste$innovatif)
+```
+
+##Lapply Uygulamları
+```{r}
+karisik <- list(bir=1:10,karesel = (1:10)^2, kup = (1:10)^3 )
+lapply(karisik, mean)
+
+lapply(karisik, function(x) x^4) # her bir elemanı bir elamanı x olarak kabul eder. 
+
+
+
+```
+

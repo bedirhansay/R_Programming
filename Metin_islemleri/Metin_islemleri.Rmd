@@ -1,0 +1,112 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+#1) KArakter olsuturma 
+
+```{r}
+#paste ile metinle yapıstırılır. sep ile ayrılır.
+metin <- ("Bu bir metindir ")
+karakter <- ("Buda bir karakterdir")
+
+paste(metin,karakter, sep="-")
+
+
+# print quote ile tırnaklar kaldırılır. 
+
+print("Karakter", quote = FALSE)
+noquote("Bedo")
+cat("Bedo") # vektor olarak algılamadan verir sonucu. 
+a <- toString (c("bedo",24,sum(1:10)))
+a
+```
+
+#2) Temel karakter islemleri
+
+```{r}
+nchar("Bedirhan") #icerisinde bulunan stringin uzunlugunu hesaplar boslukları da sayar.
+nchar(c("Bedo","SAy","halo"))  # icerisine vektor verildiginde ayrı ayrı uzunluklarını hesaplar. 
+length(c("Bedo","SAy","halo")) # icerisnde kac tane eleman oldugunu yazar. 
+
+
+tolower("BeDİRhan") # Metinleri kucuk harfe cevriri. 
+toupper("BeDİRhan") # metinleri buyuk harfe cevirir.
+
+chartr("L","l", "Laleliden bir gul aldım") # ilk harfi bulur ve ikinci harfe cevirir.
+
+abbreviate()
+
+renkler <- colors()[1:6]
+abbreviate(renkler)  # Kısaltmalar ekler
+
+
+substr("Bedirhan",2,4) # 2.ve 4. indexler araını alır.
+
+x <- c("Bir","İki","uc")
+substr(x,2,2) <- "#" 
+
+grep() # ile grep("Aranan deger", hangi vektorde arayacagım) olarak kullanılır.
+
+k <- c("naber","kanka","kanka","olmadı","kanka")
+
+grep("kanka",k) # yada 
+
+grep("an",k)
+
+#sub() ile birinci degeri ikicnisi ile degistrirebilriiz.
+
+sub("an","ak",k)
+ ```
+```
+
+#Vektorel İslemler
+
+```{r}
+union(a,b) # birlesitirmeye yarar 
+intersect() # kesisimlerini alır. 
+setdiff()# Farklılıkları ortaya çıkar. ilk vektore göre bakar. 
+setqual () # icine verilen vektorler esit mi.
+identical() # sırası dahil aynı olması gerekiy iki vektorun.
+```
+
+## Stringr Kütüphanesi 
+```{r}
+library(stringr)
+k <- c("naber","kanka","kanka","olmadı","kanka")
+str_detect(k,"kanka") # Boolen eşleşme 
+str_which(k,"kanka") # index eşleşme 
+str_count(k,"kanka") # 0 1ler ile sonuc
+str_locate(k,"kanka") # başlayıp bittiği indexi verir.
+str_locate_all(k,"kanka")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
